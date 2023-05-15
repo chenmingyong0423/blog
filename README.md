@@ -5,7 +5,7 @@
 # 公众号
 关注公众号，手机阅读更方便！
 
-![陈明勇的公众号.jpg](https://blog-1302954944.cos.ap-guangzhou.myqcloud.com/img/gzh.jpg)
+![Go技术干货.jpg](/images/Go技术干货.jpg)
 # 交流与支持
 如果您对文章有疑惑或发现错误，欢迎在 **issue** 进行提问或给予修改意见；
 
