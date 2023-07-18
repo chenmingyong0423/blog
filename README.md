@@ -1,5 +1,5 @@
 # 陈明勇的博客
-前往 **issue** 一起学习吧，喝一杯你最喜欢的饮料或茶，进入代码世界。
+前往 **issue** 一起学习吧，喝一杯你最喜欢的咖啡或茶，进入代码世界。
 # 在线阅读
 [https://chenmingyong.cn/](https://chenmingyong.cn/)
 # 公众号
