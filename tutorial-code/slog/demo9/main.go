@@ -17,23 +17,14 @@ package main
 import (
 	"context"
 	"log/slog"
-	"os"
-	"time"
 )
 
+type Password string
+
+func (Password) LogValue() slog.Value {
+	return slog.StringValue("REDACTED_PASSWORD")
+}
+
 func main() {
-	jsonLogger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		AddSource: true,
-		Level:     slog.LevelError,
-		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
-			if a.Key == slog.TimeKey {
-				if t, ok := a.Value.Any().(time.Time); ok {
-					a.Value = slog.StringValue(t.Format(time.DateTime))
-				}
-			}
-			return a
-		},
-	}))
-	jsonLogger.InfoContext(context.Background(), "json-log", slog.String("姓名", "陈明勇"))
-	jsonLogger.ErrorContext(context.Background(), "json-log", slog.String("姓名", "陈明勇"))
+	slog.LogAttrs(context.Background(), slog.LevelInfo, "敏感数据", slog.Any("password", Password("1234567890")))
 }

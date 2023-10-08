@@ -21,7 +21,9 @@ import (
 )
 
 func main() {
-	jsonLogger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
-	slog.SetDefault(jsonLogger)
-	slog.InfoContext(context.Background(), "JsonHandler", "姓名", "陈明勇") //{"time":"2023-10-08T21:11:22.41760604+08:00","level":"INFO","msg":"JsonHandler","姓名":"陈明勇"}
+	jsonLogger := slog.New(slog.NewJSONHandler(os.Stdout, nil)).WithGroup("information")
+	jsonLogger.InfoContext(context.Background(), "json-log", slog.String("name", "chenmingyong"), slog.Int("phone", 1234567890))
+
+	textLogger := slog.New(slog.NewTextHandler(os.Stdout, nil)).WithGroup("information")
+	textLogger.InfoContext(context.Background(), "json-log", slog.String("name", "chenmingyong"), slog.Int("phone", 1234567890))
 }

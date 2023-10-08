@@ -23,6 +23,5 @@ import (
 func main() {
 	jsonLogger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	slog.SetDefault(jsonLogger)
-
 	slog.InfoContext(context.Background(), "JsonHandler", "姓名", "陈明勇") // {"time":"2023-10-07T20:04:24.823804641+08:00","level":"INFO","msg":"JsonHandler","姓名":"陈明勇"}
 }

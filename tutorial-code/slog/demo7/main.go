@@ -22,5 +22,7 @@ import (
 
 func main() {
 	jsonLogger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
-	jsonLogger.LogAttrs(context.Background(), slog.LevelInfo, "高效输出日志", slog.String("姓名", "陈明勇"), slog.Int("联系方式", 12345678901))
+	logger := jsonLogger.With("systemID", "s1")
+	logger.LogAttrs(context.Background(), slog.LevelInfo, "json-log", slog.String("k1", "v1"))
+	logger.LogAttrs(context.Background(), slog.LevelInfo, "json-log", slog.String("k2", "v2"))
 }
