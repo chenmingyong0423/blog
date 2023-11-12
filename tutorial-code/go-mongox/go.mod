@@ -3,7 +3,7 @@ module chenmingyong0423/blog/tutorial-code/go-mongox
 go 1.21.2
 
 require (
-	github.com/chenmingyong0423/go-mongox v0.0.2 // indirect
+	github.com/chenmingyong0423/go-mongox v0.0.8 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
