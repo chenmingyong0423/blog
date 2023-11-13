@@ -19,12 +19,11 @@ import (
 
 	"github.com/chenmingyong0423/go-mongox/bsonx"
 	"github.com/chenmingyong0423/go-mongox/builder/query"
-	"github.com/chenmingyong0423/go-mongox/types"
 )
 
 func main() {
 	// bson.D{bson.E{Key:"姓名", Value:"陈明勇"}}
-	d := query.BsonBuilder().Add(types.KV("姓名", "陈明勇")).Build()
+	d := query.BsonBuilder().Add(bsonx.KV("姓名", "陈明勇")).Build()
 	fmt.Printf("%#v\n", d)
 
 	// bson.D{bson.E{Key:"age", Value:bson.D{{Key:"$gt", Value:18}, bson.E{Key:"$lt", Value:25}}}}
@@ -48,6 +47,6 @@ func main() {
 
 	// elemMatch
 	// bson.D{bson.E{Key: "result", Value: bson.D{bson.E{Key: "$elemMatch", Value: bson.D{bson.E{Key: "$gte", Value: 80}, bson.E{Key: "$lt", Value: 85}}}}}}
-	d = query.BsonBuilder().ElemMatch("result", bsonx.D(types.KV("$gte", 80), types.KV("$lt", 85))).Build()
+	d = query.BsonBuilder().ElemMatch("result", bsonx.D(bsonx.KV("$gte", 80), bsonx.KV("$lt", 85))).Build()
 	fmt.Printf("%#v\n", d)
 }
