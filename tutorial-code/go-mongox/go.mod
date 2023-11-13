@@ -2,7 +2,7 @@ module chenmingyong0423/blog/tutorial-code/go-mongox
 
 go 1.21.2
 
-require github.com/chenmingyong0423/go-mongox v0.0.9
+require github.com/chenmingyong0423/go-mongox v0.0.10
 
 require (
 	github.com/golang/snappy v0.0.4 // indirect

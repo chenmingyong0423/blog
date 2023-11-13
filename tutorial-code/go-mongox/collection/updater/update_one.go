@@ -21,7 +21,8 @@ import (
 
 	"github.com/chenmingyong0423/go-mongox"
 	"github.com/chenmingyong0423/go-mongox/bsonx"
-	"github.com/chenmingyong0423/go-mongox/builder/query"
+	"github.com/chenmingyong0423/go-mongox/builder/update"
+	"github.com/chenmingyong0423/go-mongox/types"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -34,37 +35,25 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	// 查询单个文档
-	post, err := postCollection.Finder().Filter(bsonx.Id("1")).FindOne(context.Background())
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(post)
 
-	// 设置 *options.FindOneOptions 参数
-	post2, err := postCollection.Finder().
+	// 更新单个文档
+	// 通过 update 包构建 bson 更新语句
+	updateResult, err := postCollection.Updater().
 		Filter(bsonx.Id("1")).
-		OneOptions(options.FindOne().SetProjection(bsonx.M("content", 0))).
-		FindOne(context.Background())
+		Updates(update.BsonBuilder().Set(bsonx.M("title", "golang")).Build()).
+		UpdateOne(context.Background())
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(post2)
+	fmt.Println(updateResult.ModifiedCount == 1) // true
 
-	// - map 作为 filter 条件
-	post3, err := postCollection.Finder().Filter(map[string]any{"_id": "1"}).FindOne(context.Background())
+	// - 使用 map 构造更新数据，并设置 *options.UpdateOptions，执行 upsert 操作
+	updateResult2, err := postCollection.Updater().
+		Filter(bsonx.Id("2")).
+		UpdatesWithOperator(types.Set, map[string]any{"title": "mongo"}).Options(options.Update().SetUpsert(true)).
+		UpdateOne(context.Background())
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(post3)
-
-	// - 复杂条件查询
-	// -- 使用 query 包构造复杂的 bson: bson.D{bson.E{Key: "title", Value: bson.M{"$eq": "go"}}, bson.E{Key: "author", Value: bson.M{"$eq": "陈明勇"}}}
-	post4, err := postCollection.Finder().
-		Filter(query.BsonBuilder().Eq("title", "go").Eq("author", "陈明勇").Build()).
-		FindOne(context.Background())
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(post4)
+	fmt.Println(updateResult2.UpsertedID.(string) == "2") // true
 }

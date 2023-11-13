@@ -15,18 +15,29 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/chenmingyong0423/go-mongox/bsonx"
-	"github.com/chenmingyong0423/go-mongox/types"
 )
 
 func main() {
-	bsonx.M("姓名", "陈明勇") // bson.M{"姓名": "陈明勇"}
+	// bson.M{"姓名": "陈明勇"}
+	m := bsonx.M("姓名", "陈明勇")
+	fmt.Printf("%#v\n\n", m)
 
-	bsonx.Id("陈明勇") // bson.M{"_id": "陈明勇"}
+	// bson.M{"_id": "陈明勇"}
+	id := bsonx.Id("陈明勇")
+	fmt.Printf("%#v\n\n", id)
 
-	bsonx.D(types.KV("姓名", "陈明勇"), types.KV("手机号", "1888***1234")) // bson.D{{Key:"姓名", Value:"陈明勇"}, {Key:"手机号", Value:"1888***1234"}}
+	// bson.D{bson.E{Key:"姓名", Value:"陈明勇"}, bson.E{Key:"手机号", Value:"1888***1234"}}
+	d := bsonx.D(bsonx.KV("姓名", "陈明勇"), bsonx.KV("手机号", "1888***1234"))
+	fmt.Printf("%#v\n\n", d)
 
-	bsonx.E("姓名", "陈明勇") // bson.E{Key:"姓名", Value:"陈明勇"}
+	// bson.E{Key:"姓名", Value:"陈明勇"}
+	e := bsonx.E("姓名", "陈明勇")
+	fmt.Printf("%#v\n\n", e)
 
-	bsonx.A("陈明勇", "1888***1234") // bson.A{"陈明勇", "1888***1234"}
+	// bson.A{"陈明勇", "1888***1234"}
+	a := bsonx.A("陈明勇", "1888***1234")
+	fmt.Printf("%#v", a)
 }

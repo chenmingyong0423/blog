@@ -30,41 +30,34 @@ func main() {
 	mongoCollection := collection.NewCollection()
 	// 使用 Post 结构体作为泛型参数创建一个 collection
 	postCollection := mongox.NewCollection[collection.Post](mongoCollection)
-	_, err := postCollection.Creator().InsertOne(context.Background(), collection.Post{Id: "1", Title: "go", Author: "陈明勇", Content: "..."})
+	_, err := postCollection.Creator().InsertMany(context.Background(), []collection.Post{
+		{Id: "1", Title: "go", Author: "陈明勇", Content: "..."},
+		{Id: "2", Title: "mongo", Author: "陈明勇", Content: "..."},
+	})
 	if err != nil {
 		panic(err)
 	}
-	// 查询单个文档
-	post, err := postCollection.Finder().Filter(bsonx.Id("1")).FindOne(context.Background())
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(post)
 
-	// 设置 *options.FindOneOptions 参数
-	post2, err := postCollection.Finder().
-		Filter(bsonx.Id("1")).
-		OneOptions(options.FindOne().SetProjection(bsonx.M("content", 0))).
-		FindOne(context.Background())
+	// 查询多个文档
+	// bson.D{bson.E{Key: "_id", Value: bson.M{"$in": []string{"1", "2"}}}}
+	posts, err := postCollection.Finder().Filter(query.BsonBuilder().InString("_id", []string{"1", "2"}...).Build()).Find(context.Background())
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(post2)
+	for _, post := range posts {
+		fmt.Println(post)
+	}
 
-	// - map 作为 filter 条件
-	post3, err := postCollection.Finder().Filter(map[string]any{"_id": "1"}).FindOne(context.Background())
+	// 设置 *options.FindOptions 参数
+	// bson.D{bson.E{Key: "_id", Value: bson.M{types.In: []string{"1", "2"}}}}
+	posts2, err := postCollection.Finder().
+		Filter(query.BsonBuilder().InString("_id", []string{"1", "2"}...).Build()).
+		Options(options.Find().SetProjection(bsonx.M("content", 0))).
+		Find(context.Background())
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(post3)
-
-	// - 复杂条件查询
-	// -- 使用 query 包构造复杂的 bson: bson.D{bson.E{Key: "title", Value: bson.M{"$eq": "go"}}, bson.E{Key: "author", Value: bson.M{"$eq": "陈明勇"}}}
-	post4, err := postCollection.Finder().
-		Filter(query.BsonBuilder().Eq("title", "go").Eq("author", "陈明勇").Build()).
-		FindOne(context.Background())
-	if err != nil {
-		panic(err)
+	for _, post := range posts2 {
+		fmt.Println(post)
 	}
-	fmt.Println(post4)
 }

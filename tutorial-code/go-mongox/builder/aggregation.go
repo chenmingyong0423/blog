@@ -24,7 +24,6 @@ import (
 )
 
 func main() {
-
 	// bson.D{bson.E{Key:"$gt", Value:[]any{"$qty", 250}}}
 	gt := aggregation.BsonBuilder().Gt("$qty", 250).Build()
 	fmt.Printf("%#v\n\n", gt)
@@ -53,5 +52,5 @@ func main() {
 		IncludeArrayIndex:          "arrayIndex",
 		PreserveNullAndEmptyArrays: true,
 	}).Build()
-	fmt.Printf("%#v\n\n", pipeline)
+	fmt.Printf("%#v", pipeline)
 }
