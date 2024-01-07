@@ -17,16 +17,18 @@ package collection
 import (
 	"context"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 type Post struct {
-	Id      string `bson:"_id"`
-	Title   string `bson:"title"`
-	Author  string `bson:"author"`
-	Content string `bson:"content"`
+	Id      primitive.ObjectID `bson:"_id,omitempty"`
+	Title   string             `bson:"title"`
+	Author  string             `bson:"author"`
+	Content string             `bson:"content"`
 }
 
 // NewCollection 示例代码，不是最佳的创建方式

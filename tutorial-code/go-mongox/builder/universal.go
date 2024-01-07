@@ -29,13 +29,16 @@ func main() {
 	id := bsonx.Id("陈明勇")
 	fmt.Printf("%#v\n\n", id)
 
-	// bson.D{bson.E{Key:"姓名", Value:"陈明勇"}, bson.E{Key:"手机号", Value:"1888***1234"}}
-	d := bsonx.D(bsonx.KV("姓名", "陈明勇"), bsonx.KV("手机号", "1888***1234"))
-	fmt.Printf("%#v\n\n", d)
-
 	// bson.E{Key:"姓名", Value:"陈明勇"}
 	e := bsonx.E("姓名", "陈明勇")
 	fmt.Printf("%#v\n\n", e)
+
+	// bson.D{bson.E{Key:"姓名", Value:"陈明勇"}, bson.E{Key:"手机号", Value:"1888***1234"}}
+	d := bsonx.D(bsonx.E("姓名", "陈明勇"), bsonx.E("手机号", "1888***1234"))
+	fmt.Printf("%#v\n\n", d)
+	// 我们还可以使用 bsonx.DBuilder 来构建 bson.D
+	d2 := bsonx.NewD().Add("姓名", "陈明勇").Add("手机号", "1888***1234").Build()
+	fmt.Printf("%#v\n\n", d2)
 
 	// bson.A{"陈明勇", "1888***1234"}
 	a := bsonx.A("陈明勇", "1888***1234")

@@ -19,8 +19,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/chenmingyong0423/go-mongox"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
+	"github.com/chenmingyong0423/go-mongox"
 )
 
 func main() {
@@ -29,18 +30,19 @@ func main() {
 	// 使用 Post 结构体作为泛型参数创建一个 collection
 	postCollection := mongox.NewCollection[collection.Post](mongoCollection)
 
+	ctx := context.Background()
 	// 插入一个文档
-	doc := collection.Post{Id: "1", Title: "go-mongox", Author: "陈明勇", Content: "go-mongox，不一样的体验。"}
-	oneResult, err := postCollection.Creator().InsertOne(context.Background(), doc)
+	doc := collection.Post{Title: "go 语言 go-mongox 库的使用教程", Author: "陈明勇", Content: "go-mongox 旨在提供更方便和高效的MongoDB数据操作体验。"}
+	oneResult, err := postCollection.Creator().InsertOne(ctx, doc)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(oneResult.InsertedID.(string) == "1") // true
+	fmt.Println(oneResult.InsertedID != nil) // true
 
 	// 携带 option 参数
-	oneResult, err = postCollection.Creator().OneOptions(options.InsertOne().SetComment("test")).InsertOne(context.Background(), collection.Post{Id: "2", Title: "go 语言 go-mongox 库的使用教程", Author: "陈明勇", Content: "go-mongox 旨在提供更方便和高效的MongoDB数据操作体验。"})
+	oneResult, err = postCollection.Creator().InsertOne(ctx, doc, options.InsertOne().SetComment("test"))
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(oneResult.InsertedID.(string) == "2") // true
+	fmt.Println(oneResult.InsertedID != nil) // true
 }

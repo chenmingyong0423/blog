@@ -24,13 +24,15 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+
 	// 你需要预先创建一个 *mongo.Collection 对象
 	mongoCollection := collection.NewCollection()
 	// 使用 Post 结构体作为泛型参数创建一个 collection
 	postCollection := mongox.NewCollection[collection.Post](mongoCollection)
-	_, err := postCollection.Creator().InsertMany(context.Background(), []collection.Post{
-		{Id: "1", Title: "go", Author: "陈明勇", Content: "..."},
-		{Id: "2", Title: "mongo", Author: "陈明勇", Content: "..."},
+	_, err := postCollection.Creator().InsertMany(ctx, []collection.Post{
+		{Title: "go-mongox", Author: "陈明勇", Content: "go-mongox 旨在提供更方便和高效的MongoDB数据操作体验。"},
+		{Title: "builder", Author: "陈明勇", Content: "..."},
 	})
 	if err != nil {
 		panic(err)
@@ -38,7 +40,9 @@ func main() {
 
 	// 删除多个文档
 	// - 通过 query 包构造复杂的 bson 语句
-	deleteResult, err := postCollection.Deleter().Filter(query.BsonBuilder().InString("_id", []string{"1", "2"}...).Build()).DeleteMany(context.Background())
+	deleteResult, err := postCollection.Deleter().
+		Filter(query.In("title", "go-mongox", "builder")).
+		DeleteMany(ctx)
 	if err != nil {
 		panic(err)
 	}

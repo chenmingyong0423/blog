@@ -19,10 +19,11 @@ import (
 	"context"
 	"fmt"
 
+	"go.mongodb.org/mongo-driver/mongo/options"
+
 	"github.com/chenmingyong0423/go-mongox"
 	"github.com/chenmingyong0423/go-mongox/bsonx"
 	"github.com/chenmingyong0423/go-mongox/builder/query"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
@@ -30,12 +31,13 @@ func main() {
 	mongoCollection := collection.NewCollection()
 	// 使用 Post 结构体作为泛型参数创建一个 collection
 	postCollection := mongox.NewCollection[collection.Post](mongoCollection)
-	_, err := postCollection.Creator().InsertOne(context.Background(), collection.Post{Id: "1", Title: "go", Author: "陈明勇", Content: "..."})
+	oneResult, err := postCollection.Creator().InsertOne(context.Background(), collection.Post{Title: "go-mongox", Author: "陈明勇", Content: "go-mongox 旨在提供更方便和高效的MongoDB数据操作体验。"})
 	if err != nil {
 		panic(err)
 	}
+
 	// 查询单个文档
-	post, err := postCollection.Finder().Filter(bsonx.Id("1")).FindOne(context.Background())
+	post, err := postCollection.Finder().Filter(query.Id(oneResult.InsertedID)).FindOne(context.Background())
 	if err != nil {
 		panic(err)
 	}
@@ -43,16 +45,15 @@ func main() {
 
 	// 设置 *options.FindOneOptions 参数
 	post2, err := postCollection.Finder().
-		Filter(bsonx.Id("1")).
-		OneOptions(options.FindOne().SetProjection(bsonx.M("content", 0))).
-		FindOne(context.Background())
+		Filter(query.Id(oneResult.InsertedID)).
+		FindOne(context.Background(), options.FindOne().SetProjection(bsonx.M("content", 0)))
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(post2)
 
 	// - map 作为 filter 条件
-	post3, err := postCollection.Finder().Filter(map[string]any{"_id": "1"}).FindOne(context.Background())
+	post3, err := postCollection.Finder().Filter(map[string]any{"_id": oneResult.InsertedID}).FindOne(context.Background())
 	if err != nil {
 		panic(err)
 	}
@@ -61,7 +62,7 @@ func main() {
 	// - 复杂条件查询
 	// -- 使用 query 包构造复杂的 bson: bson.D{bson.E{Key: "title", Value: bson.M{"$eq": "go"}}, bson.E{Key: "author", Value: bson.M{"$eq": "陈明勇"}}}
 	post4, err := postCollection.Finder().
-		Filter(query.BsonBuilder().Eq("title", "go").Eq("author", "陈明勇").Build()).
+		Filter(query.BsonBuilder().Eq("title", "go-mongox").Eq("author", "陈明勇").Build()).
 		FindOne(context.Background())
 	if err != nil {
 		panic(err)

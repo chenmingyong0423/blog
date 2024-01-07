@@ -27,4 +27,5 @@ func (Password) LogValue() slog.Value {
 
 func main() {
 	slog.LogAttrs(context.Background(), slog.LevelInfo, "敏感数据", slog.Any("password", Password("1234567890")))
+	slog.Info()
 }

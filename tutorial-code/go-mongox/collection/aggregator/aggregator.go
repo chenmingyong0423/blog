@@ -22,18 +22,19 @@ import (
 	"github.com/chenmingyong0423/go-mongox"
 	"github.com/chenmingyong0423/go-mongox/bsonx"
 	"github.com/chenmingyong0423/go-mongox/builder/aggregation"
-	"github.com/chenmingyong0423/go-mongox/types"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func main() {
+	ctx := context.Background()
+
 	// 你需要预先创建一个 *mongo.Collection 对象
 	mongoCollection := collection.NewCollection()
 	// 使用 Post 结构体作为泛型参数创建一个 collection
 	postCollection := mongox.NewCollection[collection.Post](mongoCollection)
-	_, err := postCollection.Creator().InsertMany(context.Background(), []collection.Post{
-		{Id: "1", Title: "go", Author: "陈明勇", Content: "..."},
-		{Id: "2", Title: "mongo", Author: "陈明勇", Content: "..."},
+	_, err := postCollection.Creator().InsertMany(ctx, []collection.Post{
+		{Title: "go-mongox", Author: "陈明勇", Content: "go-mongox 旨在提供更方便和高效的MongoDB数据操作体验。"},
+		{Title: "builder", Author: "陈明勇", Content: "..."},
 	})
 	if err != nil {
 		panic(err)
@@ -42,8 +43,9 @@ func main() {
 	// 聚合操作
 	// - 使用 aggregation 包构造 pipeline
 	posts, err := postCollection.
+		// 去除 content 字段
 		Aggregator().Pipeline(aggregation.StageBsonBuilder().Project(bsonx.M("content", 0)).Build()).
-		Aggregate(context.Background())
+		Aggregate(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -62,10 +64,12 @@ func main() {
 	result := make([]*DiffPost, 0)
 	//  将 author 字段更名为 name，排除 content 字段，添加 outstanding 字段，返回结果为 []*DiffPost
 	err = postCollection.Aggregator().
-		Pipeline(aggregation.StageBsonBuilder().Project(
-			bsonx.D(types.KV("name", "$author"), types.KV("author", 1), types.KV("_id", 1), types.KV("title", 1), types.KV("outstanding", aggregation.BsonBuilder().Eq("$author", "陈明勇").Build()))).Build(),
+		Pipeline(
+			aggregation.StageBsonBuilder().Project(
+				bsonx.NewD().Add("name", "$author").Add("author", 1).Add("_id", 1).Add("title", 1).Add("outstanding", aggregation.Eq("$author", "陈明勇")).Build(),
+			).Build(),
 		).
-		AggregateWithCallback(context.Background(), func(ctx context.Context, cursor *mongo.Cursor) error {
+		AggregateWithCallback(ctx, func(ctx context.Context, cursor *mongo.Cursor) error {
 			return cursor.All(ctx, &result)
 		})
 

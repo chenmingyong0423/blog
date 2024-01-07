@@ -29,20 +29,20 @@ func main() {
 	// 使用 Post 结构体作为泛型参数创建一个 collection
 	postCollection := mongox.NewCollection[collection.Post](mongoCollection)
 
+	ctx := context.Background()
+
 	docs := []collection.Post{
-		{Id: "1", Title: "go", Author: "陈明勇", Content: "..."},
-		{Id: "2", Title: "mongo", Author: "陈明勇", Content: "..."},
+		{Title: "go-mongox", Author: "陈明勇", Content: "go-mongox 旨在提供更方便和高效的MongoDB数据操作体验。"},
+		{Title: "builder", Author: "陈明勇", Content: "..."},
 	}
-	manyResult, err := postCollection.Creator().InsertMany(context.Background(), docs)
+	manyResult, err := postCollection.Creator().InsertMany(ctx, docs)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(len(manyResult.InsertedIDs) == 2) // true
+
 	// 携带 option 参数
-	manyResult, err = postCollection.Creator().ManyOptions(options.InsertMany().SetComment("test")).InsertMany(context.Background(), []collection.Post{
-		{Id: "3", Title: "go-mongox", Author: "陈明勇", Content: "..."},
-		{Id: "4", Title: "builder", Author: "陈明勇", Content: "..."},
-	})
+	manyResult, err = postCollection.Creator().InsertMany(ctx, docs, options.InsertMany().SetComment("test"))
 	if err != nil {
 		panic(err)
 	}

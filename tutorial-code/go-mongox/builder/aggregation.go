@@ -19,28 +19,28 @@ import (
 
 	"github.com/chenmingyong0423/go-mongox/bsonx"
 	"github.com/chenmingyong0423/go-mongox/builder/aggregation"
-	"github.com/chenmingyong0423/go-mongox/builder/query"
 	"github.com/chenmingyong0423/go-mongox/types"
 )
 
 func main() {
-	// bson.D{bson.E{Key:"$gt", Value:[]any{"$qty", 250}}}
-	gt := aggregation.BsonBuilder().Gt("$qty", 250).Build()
+	// bson.D{bson.E{Key:"total", Value:bson.D{bson.E{Key:"$gt", Value:[]interface {}{"$price", "$fee"}}}}}
+	gt := aggregation.Gt("total", []any{"$price", "$fee"}...)
 	fmt.Printf("%#v\n\n", gt)
 
-	// mongo.Pipeline{bson.D{bson.E{Key:"$project", Value:bson.D{bson.E{Key:"name", Value:1}, bson.E{Key:"age", Value:1}, bson.E{Key:"qtyGt250", Value:bson.D{bson.E{Key:"$gt", Value:[]interface {}{"$qty", 250}}}}}}}}
-	pipeline := aggregation.StageBsonBuilder().Project(bsonx.D(bsonx.KV("name", 1), bsonx.KV("age", 1), bsonx.KV("qtyGt250", gt))).Build()
+	// mongo.Pipeline{bson.D{bson.E{Key:"$project", Value:bson.D{bson.E{Key:"name", Value:1}, bson.E{Key:"qtyGt250", Value:bson.D{bson.E{Key:"total", Value:bson.D{bson.E{Key:"$gt", Value:[]interface {}{"$price", "$fee"}}}}}}}}}}
+	pipeline := aggregation.StageBsonBuilder().
+		Project(bsonx.NewD().Add("name", 1).Add("qtyGt250", gt).Build()).
+		Build()
 	fmt.Printf("%#v\n\n", pipeline)
 
-	// bson.D{bson.E{Key:"$or", Value:[]interface {}{bson.D{bson.E{Key:"score", Value:bson.D{bson.E{Key:"$gt", Value:70}, bson.E{Key:"$lt", Value:90}}}}, bson.D{bson.E{Key:"views", Value:bson.D{bson.E{Key:"$gte", Value:90}}}}}}}
-	or := aggregation.BsonBuilder().Or(
-		query.BsonBuilder().Gt("score", 70).Lt("score", 90).Build(),
-		query.BsonBuilder().Gte("views", 90).Build(),
-	).Build()
+	// bson.D{bson.E{Key:"result", Value:bson.D{bson.E{Key:"$or", Value:[]interface {}{bson.D{bson.E{Key:"$gt", Value:[]interface {}{"score", 70}}, bson.E{Key:"score", Value:bson.D{bson.E{Key:"$lt", Value:[]interface {}{90}}}}}, bson.D{bson.E{Key:"views", Value:bson.D{bson.E{Key:"$gte", Value:[]interface {}{90}}}}}}}}}}
+	or := aggregation.BsonBuilder().Or("result", aggregation.BsonBuilder().GtWithoutKey("score", 70).Lt("score", 90).Build(), aggregation.BsonBuilder().Gte("views", 90).Build()).Build()
 	fmt.Printf("%#v\n\n", or)
 
-	// mongo.Pipeline{bson.D{bson.E{Key:"$match", Value:bson.D{bson.E{Key:"$or", Value:[]any{bson.D{bson.E{Key:"score", Value:bson.D{bson.E{Key:"$gt", Value:70}, bson.E{Key:"$lt", Value:90}}}}, bson.D{bson.E{Key:"views", Value:bson.D{bson.E{Key:"$gte", Value:90}}}}}}}}}, bson.D{bson.E{Key:"$group", Value:bson.D{bson.E{Key:"_id", Value:any(nil)}, bson.E{Key:"count", Value:bson.D{bson.E{Key:"$sum", Value:1}}}}}}}
-	pipeline = aggregation.StageBsonBuilder().Match(or).Group(nil, bsonx.E("count", aggregation.BsonBuilder().Sum(1).Build())).Build()
+	// mongo.Pipeline{bson.D{bson.E{Key:"$match", Value:bson.D{bson.E{Key:"result", Value:bson.D{bson.E{Key:"$or", Value:[]interface {}{bson.D{bson.E{Key:"$gt", Value:[]interface {}{"score", 70}}, bson.E{Key:"score", Value:bson.D{bson.E{Key:"$lt", Value:[]interface {}{90}}}}}, bson.D{bson.E{Key:"views", Value:bson.D{bson.E{Key:"$gte", Value:[]interface {}{90}}}}}}}}}}}}, bson.D{bson.E{Key:"$group", Value:bson.D{bson.E{Key:"_id", Value:interface {}(nil)}, bson.E{Key:"count", Value:bson.D{bson.E{Key:"$sum", Value:1}}}}}}}
+	pipeline = aggregation.StageBsonBuilder().
+		Match(or).
+		Group(nil, aggregation.Sum("count", 1)...).Build()
 	fmt.Printf("%#v\n\n", pipeline)
 
 	// mongo.Pipeline{bson.D{bson.E{Key:"$unwind", Value:"$size"}}}

@@ -20,19 +20,20 @@ import (
 	"fmt"
 
 	"github.com/chenmingyong0423/go-mongox"
-	"github.com/chenmingyong0423/go-mongox/bsonx"
 	"github.com/chenmingyong0423/go-mongox/builder/query"
 	"github.com/chenmingyong0423/go-mongox/builder/update"
 )
 
 func main() {
+	ctx := context.Background()
+
 	// 你需要预先创建一个 *mongo.Collection 对象
 	mongoCollection := collection.NewCollection()
 	// 使用 Post 结构体作为泛型参数创建一个 collection
 	postCollection := mongox.NewCollection[collection.Post](mongoCollection)
-	_, err := postCollection.Creator().InsertMany(context.Background(), []collection.Post{
-		{Id: "1", Title: "go", Author: "陈明勇", Content: "..."},
-		{Id: "2", Title: "mongo", Author: "陈明勇", Content: "..."},
+	_, err := postCollection.Creator().InsertMany(ctx, []collection.Post{
+		{Title: "go-mongox", Author: "陈明勇", Content: "go-mongox 旨在提供更方便和高效的MongoDB数据操作体验。"},
+		{Title: "builder", Author: "陈明勇", Content: "..."},
 	})
 	if err != nil {
 		panic(err)
@@ -40,9 +41,9 @@ func main() {
 
 	// 更新多个文档
 	updateResult, err := postCollection.Updater().
-		Filter(query.BsonBuilder().InString("_id", []string{"1", "2"}...).Build()).
-		Updates(update.BsonBuilder().Set(bsonx.M("title", "golang")).Build()).
-		UpdateMany(context.Background())
+		Filter(query.In("title", []string{"go-mongox", "builder"}...)).
+		Updates(update.Set("title", "golang")).
+		UpdateMany(ctx)
 	if err != nil {
 		panic(err)
 	}

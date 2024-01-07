@@ -19,19 +19,24 @@ import (
 	"context"
 	"fmt"
 
+	"go.mongodb.org/mongo-driver/mongo/options"
+
+	"github.com/chenmingyong0423/go-mongox/builder/query"
+
 	"github.com/chenmingyong0423/go-mongox"
 	"github.com/chenmingyong0423/go-mongox/bsonx"
 	"github.com/chenmingyong0423/go-mongox/builder/update"
 	"github.com/chenmingyong0423/go-mongox/types"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
+	ctx := context.Background()
+
 	// 你需要预先创建一个 *mongo.Collection 对象
 	mongoCollection := collection.NewCollection()
 	// 使用 Post 结构体作为泛型参数创建一个 collection
 	postCollection := mongox.NewCollection[collection.Post](mongoCollection)
-	_, err := postCollection.Creator().InsertOne(context.Background(), collection.Post{Id: "1", Title: "go", Author: "陈明勇", Content: "..."})
+	oneResult, err := postCollection.Creator().InsertOne(ctx, collection.Post{Title: "go-mongox", Author: "陈明勇", Content: "go-mongox 旨在提供更方便和高效的MongoDB数据操作体验。"})
 	if err != nil {
 		panic(err)
 	}
@@ -39,9 +44,9 @@ func main() {
 	// 更新单个文档
 	// 通过 update 包构建 bson 更新语句
 	updateResult, err := postCollection.Updater().
-		Filter(bsonx.Id("1")).
-		Updates(update.BsonBuilder().Set(bsonx.M("title", "golang")).Build()).
-		UpdateOne(context.Background())
+		Filter(query.Id(oneResult.InsertedID)).
+		Updates(update.Set("title", "golang")).
+		UpdateOne(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -49,11 +54,11 @@ func main() {
 
 	// - 使用 map 构造更新数据，并设置 *options.UpdateOptions，执行 upsert 操作
 	updateResult2, err := postCollection.Updater().
-		Filter(bsonx.Id("2")).
-		UpdatesWithOperator(types.Set, map[string]any{"title": "mongo"}).Options(options.Update().SetUpsert(true)).
-		UpdateOne(context.Background())
+		Filter(bsonx.Id("custom-id")).
+		UpdatesWithOperator(types.Set, bsonx.M("title", "mongo")).
+		UpdateOne(ctx, options.Update().SetUpsert(true))
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(updateResult2.UpsertedID.(string) == "2") // true
+	fmt.Println(updateResult2.UpsertedID.(string) == "custom-id") // true
 }

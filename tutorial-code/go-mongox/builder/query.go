@@ -18,20 +18,28 @@ import (
 	"fmt"
 
 	"github.com/chenmingyong0423/go-mongox/bsonx"
+
 	"github.com/chenmingyong0423/go-mongox/builder/query"
 )
 
 func main() {
-	// bson.D{bson.E{Key:"姓名", Value:"陈明勇"}}
-	d := query.BsonBuilder().Add(bsonx.KV("姓名", "陈明勇")).Build()
-	fmt.Printf("%#v\n\n", d)
-
-	// bson.D{bson.E{Key:"age", Value:bson.D{{Key:"$gt", Value:18}, bson.E{Key:"$lt", Value:25}}}}
-	d = query.BsonBuilder().Gt("age", 18).Lt("age", 25).Build()
+	// 通过函数直接构造
+	// bson.D{bson.E{Key:"姓名", Value:bson.D{bson.E{Key:"$eq", Value:"陈明勇"}}}}
+	d := query.Eq("姓名", "陈明勇")
 	fmt.Printf("%#v\n\n", d)
 
 	//  bson.D{bson.E{Key:"age", Value:bson.D{{Key:"$in", Value:[]int{18, 19, 20}}}}}
-	d = query.BsonBuilder().InInt("age", 18, 19, 20).Build()
+	d = query.In("age", 18, 19, 20)
+	fmt.Printf("%#v\n\n", d)
+
+	// elemMatch
+	// bson.D{bson.E{Key: "result", Value: bson.D{bson.E{Key: "$elemMatch", Value: bson.D{bson.E{Key: "$gte", Value: 80}, bson.E{Key: "$lt", Value: 85}}}}}}
+	d = query.ElemMatch("result", bsonx.D(bsonx.E("$gte", 80), bsonx.E("$lt", 85)))
+	fmt.Printf("%#v\n\n", d)
+
+	// 通过构造器构造
+	// bson.D{bson.E{Key:"age", Value:bson.D{{Key:"$gt", Value:18}, bson.E{Key:"$lt", Value:25}}}}
+	d = query.BsonBuilder().Gt("age", 18).Lt("age", 25).Build()
 	fmt.Printf("%#v\n\n", d)
 
 	// bson.d{bson.E{Key: "$and", Value: []any{bson.D{{Key: "x", Value: bson.D{{Key: "$ne", Value: 0}}}}, bson.D{{Key: "y", Value: bson.D{{Key: "$gt", Value: 0}}}}}}
@@ -43,10 +51,5 @@ func main() {
 
 	// bson.D{bson.E{Key:"qty", Value:bson.D{{Key:"$exists", Value:true}, bson.E{Key:"$nin", Value:[]int{5, 15}}}}}
 	d = query.BsonBuilder().Exists("qty", true).NinInt("qty", 5, 15).Build()
-	fmt.Printf("%#v\n\n", d)
-
-	// elemMatch
-	// bson.D{bson.E{Key: "result", Value: bson.D{bson.E{Key: "$elemMatch", Value: bson.D{bson.E{Key: "$gte", Value: 80}, bson.E{Key: "$lt", Value: 85}}}}}}
-	d = query.BsonBuilder().ElemMatch("result", bsonx.D(bsonx.KV("$gte", 80), bsonx.KV("$lt", 85))).Build()
 	fmt.Printf("%#v", d)
 }
