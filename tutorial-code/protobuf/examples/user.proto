@@ -3,8 +3,8 @@ package tutorial;
 
 option go_package = "github.com/chenmingyong0423/blog/tutorial-code/protobuf/examples";
 
-message Post {
-    string title = 1;
-    string description = 2;
-    string content = 3;
+message User {
+    string name = 1;
+    int32 age = 2;
+    string email = 3;
 }
