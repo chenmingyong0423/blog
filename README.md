@@ -28,6 +28,7 @@
 
 - [go-mongox：简单高效，让文档操作和 bson 数据构造更流畅](https://go-mongox.dev/)
 - [[Go开源工具] go-optioner：轻松生成函数选项模式代码](https://github.com/chenmingyong0423/go-optioner/blob/main/README-zh_CN.md)
+- [效率提升 80%：go-mongox 让复杂的 BSON 数据编写变得简单](https://mp.weixin.qq.com/s/l8zx-muYex055waFu3-AJg)
 
 </details>
 
@@ -55,9 +56,11 @@
 
 <details>
 <summary>并发</summary>
-
-- [Go singleflight：防缓存击穿利器](https://mp.weixin.qq.com/s/deInGh6vuhlVcmIXJyofpw)
+  
 - [Go 定时器：Timer 和 Ticker](https://mp.weixin.qq.com/s/IgXFofLEwhYYYUtIZ4_rTA)
+- [Go singleflight：防缓存击穿利器](https://mp.weixin.qq.com/s/deInGh6vuhlVcmIXJyofpw)
+- [Go singleflight 源码剖析](https://mp.weixin.qq.com/s/zq5V6zkVrAx-j8obm6YcIA)
+- [深入浅出 Go 并发协同等待利器：sync.WaitGroup](https://mp.weixin.qq.com/s/Gwp0LyuyHzfpyTQGY4UZEg)
 
 更新中...
 </details>
