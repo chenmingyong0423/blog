@@ -1,2 +1,4 @@
 github.com/chenmingyong0423/go-eventbus v0.0.0-20240512192141-bc0bdc51c7c2 h1:9DMxzOy8SF0Uy+U6Xh9XTBFk9VWnvuOxG1LEnJ/yuGQ=
 github.com/chenmingyong0423/go-eventbus v0.0.0-20240512192141-bc0bdc51c7c2/go.mod h1:xbHdi38mLnhtQBnZLaRBRiZqxzmBe+nKFLHqhzL62Lg=
+github.com/chenmingyong0423/go-eventbus v0.1.0 h1:EEokj9RWO3YftkWatCOwS19yn+gLBJQqonlcC3gl7s0=
+github.com/chenmingyong0423/go-eventbus v0.1.0/go.mod h1:xbHdi38mLnhtQBnZLaRBRiZqxzmBe+nKFLHqhzL62Lg=
