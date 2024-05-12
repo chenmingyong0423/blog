@@ -16,8 +16,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/chenmingyong0423/go-eventbus"
 	"time"
+
+	"github.com/chenmingyong0423/go-eventbus"
 )
 
 func main() {
