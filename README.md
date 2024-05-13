@@ -73,5 +73,14 @@
 更新中...
 </details>
 
+<details>
+<summary>事件驱动编程</summary>
+
+- [Go 事件驱动编程：实现一个简单的事件总线](https://mp.weixin.qq.com/s/7LgEB79u6orPmW-44KSBpg)
+
+更新中...
+</details>
+
+
 # 版权声明
 所有文章采用 [署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 进行许可。
