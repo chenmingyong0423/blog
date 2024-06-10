@@ -26,7 +26,7 @@
 <details>
 <summary>开源</summary>
 
-- [go-mongox：简单高效，让文档操作和 bson 数据构造更流畅](https://go-mongox.dev/)
+- [Go 语言 mongox 库：简化操作、安全、高效、可扩展、BSON 构建](https://go-mongox.dev/)
 - [[Go开源工具] go-optioner：轻松生成函数选项模式代码](https://github.com/chenmingyong0423/go-optioner/blob/main/README-zh_CN.md)
 - [效率提升 80%：go-mongox 让复杂的 BSON 数据编写变得简单](https://mp.weixin.qq.com/s/l8zx-muYex055waFu3-AJg)
 
@@ -50,6 +50,7 @@
 - [Go 中的指针和结构体](https://mp.weixin.qq.com/s/a4MAn0hazeZ1fhnI3fYSkA)
 - [Go 的分支结构(if - else-if - else、switch)](https://mp.weixin.qq.com/s/bg13n0EhMa6ISXf2lXeilw)
 - [Go 的循环结构 —— for 循环](https://mp.weixin.qq.com/s/E9FSIHeyce0Jb4LLBcWgYw)
+- [Go 的 18 个内置函数，你掌握了多少？](https://mp.weixin.qq.com/s/RCsmaiVjFZmRfcYV548RHw)
 
 更新中...
 </details>
@@ -69,6 +70,14 @@
 <summary>实战前置</summary>
 
 - [Go JWT 全面指南](https://mp.weixin.qq.com/s/OFekl04yBhW324fAc9nkXA)
+
+更新中...
+</details>
+
+<details>
+<summary>Go 问题</summary>
+
+- [Go 语言揭秘：接口类型是 nil 但不等于 nil？](https://mp.weixin.qq.com/s/-w6Fbbjo1d-rVD72eM9coA)
 
 更新中...
 </details>
