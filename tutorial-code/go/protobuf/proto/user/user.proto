@@ -1,0 +1,28 @@
+syntax = "proto3";
+package tutorial;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/chenmingyong0423/blog/tutorial-code/go/protobuf/protos/user";
+
+message User {
+    int32 id = 1;
+    string name = 2;
+    int32 age = 3;
+
+    message PhoneNumber {
+        string number = 1;
+        PhoneType type = 2;
+    }
+
+    repeated PhoneNumber phones = 4;
+
+    google.protobuf.Timestamp birth = 5;
+}
+
+enum PhoneType {
+    // 个人手机
+    PHONE_TYPE_MOBILE = 0;
+    // 工作电话
+    PHONE_TYPE_WORK = 1;
+}
